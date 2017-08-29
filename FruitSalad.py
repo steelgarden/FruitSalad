@@ -4,10 +4,12 @@ class Player:
         self.coins=0
         self.fruits=['blueberry']
         self.name=name
+        self.stress=0
     def status(self):
         print('Current status for '+self.name)
         print('Hearts = ',self.quarterHearts/4)
         print('Coins = ',self.coins)
+        print('Stress = ',self.stress)
     def action(self):
         print(self.name+": it's your turn!")
         
@@ -33,6 +35,10 @@ class Player:
             self.quarterHearts+=1
         else:
             print("haha, you can't type so you don't get anything!!!")
+        self.stress+=1
+        if self.stress==3:
+            self.quarterHearts-=1
+            self.stress=0
         self.status()
         target.status()
         print()
