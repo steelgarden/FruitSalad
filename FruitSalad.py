@@ -1,8 +1,39 @@
+class BlueBerry:
+    cost=2
+    fireDamage=0
+    damage=1
+    coin=True
+    immuneFire=False
+
+class DragonFruit:
+    cost=4
+    fireDamage=5
+    damage=0
+    coin=False
+    immuneFire=False
+
+class Apple:
+    cost=5
+    fireDamage=0
+    damage=4
+    coin=True
+    immuneFire=False
+
+class Banana:
+    cost=5
+    fireDamage=0
+    damage=3
+    coin=True
+    immuneFire=True
+
+def fruitName(f):
+    return f.__class__.__name__
+    
 class Player:
     def __init__(self, name):
         self.quarterHearts = 40
         self.coins=0
-        self.fruits=['blueberry']
+        self.fruits=[BlueBerry()]
         self.name=name
         self.stress=0
     def status(self):
@@ -10,18 +41,21 @@ class Player:
         print('Hearts = ',self.quarterHearts/4)
         print('Coins = ',self.coins)
         print('Stress = ',self.stress)
-    def action(self):
-        print(self.name+": it's your turn!")
+    def chooseFruit(self):
+        print(self.name+": it's your turn to choose a fruit!")
         
-        for id,name in enumerate(self.fruits):
-            print(id,name)
+        for id,fruit in enumerate(self.fruits):
+            print(id,fruitName(fruit))
         print('Which fruit do you want to use? ', end='')
         response=input()
         id=int(response)
-        print('You have chosen to use '+self.fruits[id]+'!')
+        self.currentFruit=self.fruits[id]
+        print('You have chosen to use '+fruitName(self.currentFruit)+'!')
+    
+    def action(self):
         for id,player in enumerate(allPlayers):
             print(id,player.name)
-        print('Which player do you want to target? ', end='')
+        print(self.name+': which player do you want to target with your '+fruitName(self.currentFruit)+'? ', end='')
         response=input()
         id=int(response)
         target=allPlayers[id]
@@ -49,6 +83,10 @@ allPlayers=[p1, p2]
 
 while True:
     for p in allPlayers:
+        p.chooseFruit()
+    for p in allPlayers:
         p.action()
+    allPlayers.append(allPlayers.pop(0))
+    
         
         
