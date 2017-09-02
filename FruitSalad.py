@@ -5,6 +5,8 @@ class Fruit:
     immuneFire=False
     def name(self):
         return self.__class__.__name__
+    def details(self):
+        return "%s: cost=%d damage=%d fireDamage=%d getsCoins=%s immuneFire=%s"%(self.name(), self.cost, self.damage, self.fireDamage, self.coin, self.immuneFire)
     
 class BlueBerry(Fruit):
     cost=2
@@ -24,6 +26,8 @@ class Banana(Fruit):
     damage=3
     immuneFire=True
 
+allFruits=[BlueBerry, DragonFruit, Apple, Banana]
+    
 class Player:
     def __init__(self, name):
         self.quarterHearts = 40
@@ -36,11 +40,16 @@ class Player:
         print('Hearts = ',self.quarterHearts/4)
         print('Coins = ',self.coins)
         print('Stress = ',self.stress)
+    def addStress(self, amount):
+        self.stress+=amount
+        if self.stress >= 3:
+            self.quarterHearts-=self.stress//3
+            self.stress=0
     def chooseFruit(self):
         print(self.name+": it's your turn to choose a fruit!")
         
         for id,fruit in enumerate(self.fruits):
-            print(id,fruit.name())
+            print(id,fruit.details())
         print('Which fruit do you want to use? ', end='')
         response=input()
         id=int(response)
@@ -75,16 +84,23 @@ class Player:
             coinsTaken=0
         self.coins+=coinsTaken
         self.quarterHearts+=(damageDone-coinsTaken)
-        self.stress+=1
-        if self.stress==3:
-            self.quarterHearts-=1
-            self.stress=0
+        self.addStress(1)
         self.status()
         target.status()
-        
-        print()
-        
-        
+
+        for id,fruit in enumerate(allFruits):
+            print(id,fruit().details())
+        print(len(allFruits), "nothing")
+        print ("What fruit do you want to buy? ", end='')
+        buyInput=input()
+        try:
+            buyIndex=int(buyInput)
+        except:
+            buyIndex=-1
+        if 0 <= buyIndex < len(allFruits) and allFruits[buyIndex].cost<=self.coins:
+            self.fruits.append(allFruits[buyIndex]())
+            self.coins -= allFruits[buyIndex].cost
+            
 p1=Player('Ian')
 p2=Player('Ben')
 allPlayers=[p1, p2]
